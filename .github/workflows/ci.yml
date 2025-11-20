@@ -14,44 +14,35 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      # Checkout repository
       - uses: actions/checkout@v3
 
-      # Set up CML
       - uses: iterative/setup-cml@v2
 
-      # Install dependencies
       - name: Install Packages
         run: make install
 
-      # Code formatting
       - name: Format
         run: make format
 
-      # Training
       - name: Train
         run: make train
 
-      # Evaluation
       - name: Evaluation
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: make eval
 
       # ---------------------------------------------------
-      # Upload Results folder as artifact
+      # Upload artifacts using the NEW VERSION (v4)
       # ---------------------------------------------------
       - name: Upload Results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: results
           path: Results/
 
-      # ---------------------------------------------------
-      # Upload Model folder as artifact
-      # ---------------------------------------------------
       - name: Upload Model
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: model
           path: Model/
