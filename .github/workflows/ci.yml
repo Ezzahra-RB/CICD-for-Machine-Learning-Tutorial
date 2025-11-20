@@ -1,4 +1,5 @@
 name: Continuous Integration
+
 on:
   push:
     branches: [ "main" ]
@@ -7,19 +8,50 @@ on:
   workflow_dispatch:
   
 permissions: write-all
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    
     steps:
+      # Checkout repository
       - uses: actions/checkout@v3
+
+      # Set up CML
       - uses: iterative/setup-cml@v2
+
+      # Install dependencies
       - name: Install Packages
         run: make install
+
+      # Code formatting
       - name: Format
         run: make format
+
+      # Training
       - name: Train
         run: make train
+
+      # Evaluation
       - name: Evaluation
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: make eval
+
+      # ---------------------------------------------------
+      # Upload Results folder as artifact
+      # ---------------------------------------------------
+      - name: Upload Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: results
+          path: Results/
+
+      # ---------------------------------------------------
+      # Upload Model folder as artifact
+      # ---------------------------------------------------
+      - name: Upload Model
+        uses: actions/upload-artifact@v3
+        with:
+          name: model
+          path: Model/
