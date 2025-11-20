@@ -59,4 +59,15 @@ jobs:
           git commit -m "Update branch with new artifacts" || echo "No changes to commit"
           git push origin main
 
+      - name: Push artifacts branch
+        run: |
+          git config user.name "$NAME"
+          git config user.email "$EMAIL"
+          git checkout -b update-artifacts
+          git add Model Results report.md
+          git commit -m "Add latest artifacts"
+          git push origin update-artifacts --force
+        env:
+          NAME: ${{ secrets.USER_NAME }}
+          EMAIL: ${{ secrets.USER_EMAIL }}
 
