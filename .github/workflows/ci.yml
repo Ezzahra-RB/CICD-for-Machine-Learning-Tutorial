@@ -47,9 +47,16 @@ jobs:
           name: model
           path: Model/
 
+
       - name: Update Branch
         env:
           NAME: ${{ secrets.USER_NAME }}
           EMAIL: ${{ secrets.USER_EMAIL }}
-        run: make update-branch USER_NAME=$NAME USER_EMAIL=$EMAIL
+        run: |
+          git config user.name "$NAME"
+          git config user.email "$EMAIL"
+          git add .
+          git commit -m "Update branch with new artifacts" || echo "No changes to commit"
+          git push origin main
+
 
