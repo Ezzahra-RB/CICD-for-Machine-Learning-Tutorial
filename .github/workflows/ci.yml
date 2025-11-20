@@ -46,3 +46,35 @@ jobs:
         with:
           name: model
           path: Model/
+
+
+      - name: Update Branch
+        env:
+          NAME: ${{ secrets.USER_NAME }}
+          EMAIL: ${{ secrets.USER_EMAIL }}
+        run: |
+          git config user.name "$NAME"
+          git config user.email "$EMAIL"
+          git checkout -b update-artifacts || git checkout update-artifacts
+          git add Model Results report.md
+          # Only commit if there are changes
+          if ! git diff-index --quiet HEAD; then
+            git commit -m "Update artifacts from workflow"
+            git push origin update-artifacts --force
+          else
+            echo "No changes to commit"
+          fi
+
+
+      - name: Push artifacts branch
+        run: |
+          git config user.name "$NAME"
+          git config user.email "$EMAIL"
+          git checkout -b update-artifacts
+          git add Model Results report.md
+          git commit -m "Add latest artifacts"
+          git push origin update-artifacts --force
+        env:
+          NAME: ${{ secrets.USER_NAME }}
+          EMAIL: ${{ secrets.USER_EMAIL }}
+
